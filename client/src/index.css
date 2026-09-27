@@ -1,0 +1,624 @@
+@import "tailwindcss";
+@import "./styles/theme.css";
+
+/* =========================================================
+   TAILWIND NAMES FOR THE THEME COLORS
+   These are short aliases for the variables in styles/theme.css,
+   so components can write `bg-page`, `text-ink`, `bg-gum`, etc.
+   Change the colors in theme.css — not here.
+   ========================================================= */
+@theme inline {
+  --color-page: var(--color-background);
+  --color-page-deep: var(--color-background-deep);
+  --color-panel: var(--color-surface);
+  --color-panel-raised: var(--color-surface-raised);
+  --color-line: var(--color-border);
+  --color-ink: var(--color-text);
+  --color-ink-muted: var(--color-text-muted);
+  --color-ink-dark: var(--color-text-dark);
+  --color-gum: var(--color-pink-primary);
+  --color-gum-light: var(--color-pink-light);
+  --color-gum-soft: var(--color-pink-soft);
+  --color-gum-deep: var(--color-pink-deep);
+  --color-creme: var(--color-cream);
+  --color-lilac: var(--color-lavender);
+}
+
+/* Fonts: change the families here (they are loaded in index.html). */
+@theme {
+  --font-title: "Fredoka", "Baloo 2", ui-rounded, system-ui, sans-serif;
+  --font-candy: "Chewy", "Fredoka", ui-rounded, system-ui, sans-serif;
+  --font-body: "Nunito", ui-rounded, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    background: var(--color-background);
+  }
+  body {
+    min-height: 100svh;
+    background: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.35s ease, color 0.35s ease;
+  }
+  ::selection {
+    background: var(--color-pink-primary);
+    color: var(--color-text-dark);
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-pink-light);
+    outline-offset: 3px;
+    border-radius: 12px;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  /* =======================================================
+     BUBBLE LETTERS (used by components/ui/BubbleTitle.tsx)
+     Each letter is stacked from three copies of itself:
+       1. .bubble-letter__rim   – thick dark-pink outline + shadow
+       2. .bubble-letter__body  – the pink "inflated" letter
+       3. .bubble-letter__gloss – shine + highlight spots, clipped to the letter
+     ======================================================= */
+  .bubble-letter {
+    position: relative;
+    display: inline-block;
+    font-family: var(--font-title);
+    font-weight: 700;
+    line-height: 1;
+    white-space: pre;
+    margin-inline: 0.012em;
+  }
+  .bubble-letter__rim,
+  .bubble-letter__body,
+  .bubble-letter__gloss {
+    display: block;
+  }
+  .bubble-letter__body,
+  .bubble-letter__gloss {
+    position: absolute;
+    inset: 0;
+  }
+  .bubble-letter__rim {
+    color: var(--title-outline);
+    -webkit-text-stroke: 0.075em var(--title-outline);
+    filter: drop-shadow(0 0.045em 0 var(--title-depth))
+      drop-shadow(0 0.09em 0.06em rgb(0 0 0 / 0.22));
+  }
+  .bubble-letter__body {
+    color: var(--title-fill);
+    -webkit-text-stroke: 0.022em var(--title-fill);
+  }
+  .bubble-letter__gloss {
+    color: transparent;
+    /* --gx / --gy position the highlight; set per letter in BubbleTitle.tsx */
+    background:
+      radial-gradient(0.034em 0.085em at var(--gx, 30%) var(--gy, 34%), var(--title-gloss) 88%, transparent 100%),
+      radial-gradient(0.024em 0.024em at calc(var(--gx, 30%) + 1%) calc(var(--gy, 34%) + 14%), var(--title-gloss) 85%, transparent 100%),
+      linear-gradient(180deg, rgb(255 255 255 / 0.32) 0%, rgb(255 255 255 / 0) 42%, rgb(160 20 90 / 0) 70%, rgb(160 20 90 / 0.14) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  /* Tiny titles (navbar logo): the highlight spots just look like noise. */
+  .bubble-title--plain .bubble-letter__gloss {
+    display: none;
+  }
+
+  /* =======================================================
+     ORGANIC BUTTONS (components/ui/StatusButton.tsx)
+     The wobbly shape comes from the uneven border-radius set
+     per button in StatusButton.tsx.
+     ======================================================= */
+  .organic-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--button-bg);
+    color: var(--button-text);
+    font-family: var(--font-candy);
+    letter-spacing: 0.02em;
+    box-shadow:
+      inset 0 -0.3em 0 var(--button-shade),
+      inset 0 0.18em 0 rgb(255 255 255 / 0.55),
+      0 0.55em 0.9em -0.2em rgb(0 0 0 / 0.35);
+    transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .organic-button:hover,
+  .organic-button:focus-visible {
+    background: var(--button-bg-hover);
+    color: var(--button-text-hover);
+    box-shadow:
+      inset 0 -0.3em 0 var(--color-pink-deep),
+      inset 0 0.18em 0 rgb(255 255 255 / 0.55),
+      0 0.9em 1.3em -0.25em rgb(0 0 0 / 0.4);
+  }
+  .organic-button[aria-current="page"] {
+    background: var(--color-pink-light);
+    color: var(--color-text-dark);
+    box-shadow:
+      inset 0 -0.3em 0 var(--color-pink-deep),
+      inset 0 0.18em 0 rgb(255 255 255 / 0.55),
+      0 0.55em 0.9em -0.2em rgb(0 0 0 / 0.35);
+  }
+
+  /* =======================================================
+     GLOSSY DECORATIVE BUBBLES (components/ui/Bubble.tsx)
+     ======================================================= */
+  .gloss-bubble {
+    position: absolute;
+    border-radius: 9999px;
+    background:
+      radial-gradient(circle at 34% 30%, rgb(255 255 255 / 0.95) 0 9%, transparent 11%),
+      radial-gradient(circle at 42% 38%, var(--bubble-light) 0%, var(--bubble-color) 58%, var(--bubble-dark) 100%);
+    box-shadow: 0 0.25em 0.5em rgb(0 0 0 / 0.18);
+    pointer-events: none;
+  }
+
+  /* =======================================================
+     TV SETS (components/channels/TvSet.tsx)
+     Each collection is a little retro TV. --tv-color is set per TV
+     (the collection color). Screen color: --tv-screen in theme.css.
+     ======================================================= */
+  .tv {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: clamp(9.5rem, 42vw, 15rem);
+    padding-top: 2.4rem;
+    border-radius: 2rem;
+  }
+  .tv__antenna {
+    position: absolute;
+    top: 0.2rem;
+    left: 50%;
+    height: 2.4rem;
+  }
+  .tv__antenna > span {
+    position: absolute;
+    bottom: 0;
+    left: -1.5px;
+    width: 3px;
+    height: 2.3rem;
+    border-radius: 3px;
+    background: var(--color-text-muted);
+    transform-origin: bottom center;
+    transform: rotate(-28deg);
+  }
+  .tv__antenna > span:last-child {
+    transform: rotate(28deg);
+  }
+  .tv__antenna > span::after {
+    content: "";
+    position: absolute;
+    top: -0.3rem;
+    left: 50%;
+    width: 0.6rem;
+    height: 0.6rem;
+    margin-left: -0.3rem;
+    border-radius: 9999px;
+    background: radial-gradient(circle at 35% 30%, #fff 0 15%, var(--color-pink-light) 40%, var(--color-pink-primary) 100%);
+  }
+  .tv:hover .tv__antenna > span:first-child {
+    animation: antenna-left 0.7s ease-in-out;
+  }
+  .tv:hover .tv__antenna > span:last-child {
+    animation: antenna-right 0.7s ease-in-out;
+  }
+  .tv__body {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0.7rem 0.7rem 0.5rem;
+    border-radius: 1.8rem 2rem 1.7rem 1.9rem;
+    background: var(--tv-color);
+    box-shadow:
+      inset 0 -0.35rem 0 rgb(0 0 0 / 0.14),
+      inset 0 0.25rem 0 rgb(255 255 255 / 0.45),
+      0 1rem 1.6rem -0.8rem rgb(0 0 0 / 0.5);
+  }
+  .tv__screen {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 1.3rem / 1.5rem;
+    background: var(--tv-screen);
+    box-shadow:
+      inset 0 0 0 0.3rem rgb(0 0 0 / 0.22),
+      inset 0 0 2rem rgb(0 0 0 / 0.6);
+  }
+  .tv__picture {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    padding: 0.8rem;
+    background: radial-gradient(ellipse at 50% 50%, color-mix(in oklab, var(--tv-color), transparent 70%), transparent 72%);
+  }
+  .tv__channel {
+    position: absolute;
+    top: 0.65rem;
+    left: 0.85rem;
+    font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--color-mint);
+    text-shadow: 0 0 6px currentColor;
+  }
+  .tv__name {
+    position: relative;
+    font-family: var(--font-title);
+    font-size: clamp(1.05rem, 4.2vw, 1.65rem);
+    font-weight: 700;
+    line-height: 1.05;
+    text-align: center;
+    color: var(--tv-color);
+    text-shadow:
+      0 0 0.7rem color-mix(in oklab, var(--tv-color), transparent 35%),
+      0 0.08em 0 rgb(0 0 0 / 0.5);
+  }
+  .tv__count {
+    position: relative;
+    font-family: var(--font-candy);
+    font-size: clamp(0.8rem, 3vw, 1rem);
+    letter-spacing: 0.04em;
+    color: var(--color-cream);
+    opacity: 0.8;
+  }
+  /* Pastel test-card bars for empty channels */
+  .tv__bars {
+    position: absolute;
+    inset: 0;
+    opacity: 0.28;
+    background: linear-gradient(90deg,
+      var(--color-cream) 0 14.3%, var(--color-yellow) 0 28.6%, var(--color-mint) 0 42.9%,
+      var(--spine-english) 0 57.2%, var(--color-lavender) 0 71.5%, var(--color-pink-light) 0 85.8%, var(--color-peach) 0);
+  }
+  .tv--empty .tv__name {
+    color: var(--color-cream);
+    opacity: 0.85;
+  }
+  .tv__scanlines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(to bottom, rgb(255 255 255 / 0.05) 0 1px, transparent 1px 3px);
+    animation: tv-flicker 5s steps(1) infinite;
+  }
+  .tv__roll {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -35%;
+    height: 35%;
+    pointer-events: none;
+    background: linear-gradient(to bottom, transparent, rgb(255 255 255 / 0.07), transparent);
+    animation: tv-roll 7s linear infinite;
+  }
+  .tv__static {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px;
+    mix-blend-mode: screen;
+    animation: tv-noise 0.3s steps(4) infinite;
+    transition: opacity 0.12s ease;
+  }
+  .tv:hover .tv__static {
+    animation-name: tv-noise, tv-blip;
+    animation-duration: 0.3s, 0.5s;
+    animation-iteration-count: infinite, 1;
+    animation-timing-function: steps(4), ease-out;
+  }
+  .tv__static.is-on {
+    opacity: 0.9;
+  }
+  .tv__glare {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgb(255 255 255 / 0.16) 0%, transparent 32%);
+  }
+  .tv__controls {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.35rem 0.1rem;
+  }
+  .tv__knob {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 9999px;
+    background: var(--color-cream);
+    box-shadow: inset 0 -2px 0 rgb(0 0 0 / 0.2);
+    transition: transform 0.4s ease;
+  }
+  .tv:hover .tv__knob:first-child {
+    transform: rotate(120deg) scale(1.1);
+  }
+  .tv__grille {
+    margin-left: auto;
+    width: 45%;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: repeating-linear-gradient(90deg, rgb(0 0 0 / 0.2) 0 3px, transparent 3px 6px);
+  }
+  .tv__feet {
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+  }
+  .tv__feet > span {
+    width: 1.1rem;
+    height: 0.55rem;
+    border-radius: 0 0 0.6rem 0.6rem;
+    background: color-mix(in oklab, var(--tv-color), black 22%);
+  }
+
+  /* =======================================================
+     VHS TAPES (components/library/Tape.tsx)
+     --tape-case is set per tape (the collection color).
+     ======================================================= */
+  .tape {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.28rem;
+    overflow: hidden;
+    padding: 0.35rem 0.3rem 0.3rem;
+    border-radius: 0.3rem 0.3rem 0.22rem 0.22rem;
+    background: var(--tape-case);
+    box-shadow:
+      inset 2px 0 0 rgb(255 255 255 / 0.3),
+      inset -3px 0 0 rgb(0 0 0 / 0.16),
+      inset 0 -3px 0 rgb(0 0 0 / 0.12),
+      0.25rem 0.2rem 0.55rem -0.2rem rgb(0 0 0 / 0.5);
+    transition: filter 0.3s ease, opacity 0.3s ease;
+  }
+  /* the ridged grip at the top of a cassette case */
+  .tape__grip {
+    flex-shrink: 0;
+    width: 70%;
+    height: 0.55rem;
+    border-radius: 2px;
+    background: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.2) 0 1px, transparent 1px 3px);
+  }
+  /* the cream label sticker; a size container so the title can scale to fit */
+  .tape__label {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 0.2rem;
+    background:
+      linear-gradient(to right, transparent 0 calc(100% - 3px), rgb(0 0 0 / 0.05) 0),
+      var(--tape-label);
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.06);
+    container-type: size;
+  }
+  .tape__title {
+    font-family: var(--font-body); /* Nunito ExtraBold — clean and easy to read small */
+    font-weight: 800;
+    line-height: 1.1;
+    white-space: nowrap;
+    color: var(--color-text-dark);
+    writing-mode: vertical-rl;
+  }
+  .tape__sticker {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 9999px;
+    background: var(--color-cream);
+    box-shadow: inset 0 -2px 0 var(--color-cream-shade);
+    font-size: 0.58rem;
+    font-weight: 800;
+    color: var(--color-text-dark);
+  }
+  .tape__brand {
+    flex-shrink: 0;
+    font-size: 0.5rem;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    color: rgb(0 0 0 / 0.42);
+  }
+
+  /* ✕ Not for me: greyed out (a bit clearer on hover) */
+  .tape--dislike {
+    filter: grayscale(0.9) brightness(0.85);
+    opacity: 0.5;
+  }
+  .group:hover .tape--dislike {
+    opacity: 0.8;
+  }
+
+  /* ♥ Favourites: soft pulsing glow + bubbles floating up */
+  .tape-wrap--fav .tape {
+    box-shadow:
+      inset 2px 0 0 rgb(255 255 255 / 0.3),
+      inset -3px 0 0 rgb(0 0 0 / 0.16),
+      0 0 0 2px var(--color-pink-light),
+      0.25rem 0.2rem 0.55rem -0.2rem rgb(0 0 0 / 0.5);
+  }
+  .tape-glow {
+    position: absolute;
+    inset: -0.5rem -0.55rem 0;
+    border-radius: 1rem;
+    background: radial-gradient(ellipse at 50% 55%, var(--color-favorite-glow) 0%, transparent 70%);
+    filter: blur(6px);
+    opacity: 0.55;
+    pointer-events: none;
+    animation: fav-pulse 2.6s ease-in-out infinite;
+  }
+  .fav-bubble {
+    position: absolute;
+    bottom: 55%;
+    z-index: 2;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 9999px;
+    pointer-events: none;
+    background: radial-gradient(circle at 35% 30%, #fff 0 18%, var(--color-pink-light) 45%, transparent 75%);
+    opacity: 0;
+    animation: fav-rise 3.4s ease-out infinite;
+  }
+  .fav-bubble:nth-of-type(2) { left: 20%; animation-delay: 0.2s; }
+  .fav-bubble:nth-of-type(3) { left: 60%; width: 0.32rem; height: 0.32rem; animation-delay: 1.4s; }
+  .fav-bubble:nth-of-type(4) { left: 40%; width: 0.55rem; height: 0.55rem; animation-delay: 2.5s; }
+  .heart-badge {
+    animation: heartbeat 1.9s ease-in-out infinite;
+  }
+
+  /* Poster cards get the same marks */
+  .card--fav {
+    box-shadow: 0 0 0 3px var(--color-pink-light), 0 0 1.6rem -0.2rem var(--color-favorite-glow);
+    animation: fav-card-pulse 2.6s ease-in-out infinite;
+  }
+  .card--dislike {
+    filter: grayscale(0.9) brightness(0.85);
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+  }
+  .group:hover .card--dislike {
+    opacity: 0.8;
+  }
+
+  /* =======================================================
+     TAPE RACK (components/library/Shelf.tsx)
+     A repeating plank is painted under every row of books.
+     --row-h must match the row height used in Shelf.tsx.
+     ======================================================= */
+  .shelf {
+    --row-h: 12.5rem;
+    --plank: 0.75rem;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--row-h) - var(--plank)),
+      var(--shelf-top) calc(var(--row-h) - var(--plank)),
+      var(--shelf-top) calc(var(--row-h) - var(--plank) + 0.3rem),
+      var(--shelf-front) calc(var(--row-h) - var(--plank) + 0.3rem),
+      var(--shelf-front) var(--row-h)
+    );
+  }
+  @media (max-width: 640px) {
+    .shelf {
+      --row-h: 11rem;
+    }
+  }
+
+  /* Soft card used for panels, filter bars and forms */
+  .candy-panel {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 2rem 2.25rem 2rem 2.4rem / 2.2rem 2rem 2.4rem 2rem;
+    box-shadow: 0 1.2rem 2.5rem -1.5rem rgb(0 0 0 / 0.45);
+  }
+
+  .field-input {
+    width: 100%;
+    border-radius: 1.1rem;
+    border: 2px solid var(--color-border);
+    background: var(--color-background);
+    color: var(--color-text);
+    padding: 0.7rem 1rem;
+    font-weight: 600;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .field-input::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.7;
+  }
+  .field-input:focus {
+    outline: none;
+    border-color: var(--color-pink-light);
+    box-shadow: 0 0 0 4px rgb(255 155 203 / 0.2);
+  }
+  .field-input[aria-invalid="true"] {
+    border-color: var(--color-pink-primary);
+  }
+}
+
+@keyframes antenna-left {
+  0%, 100% { transform: rotate(-28deg); }
+  30% { transform: rotate(-40deg); }
+  60% { transform: rotate(-20deg); }
+}
+@keyframes antenna-right {
+  0%, 100% { transform: rotate(28deg); }
+  30% { transform: rotate(18deg); }
+  60% { transform: rotate(38deg); }
+}
+@keyframes tv-flicker {
+  0%, 100% { opacity: 1; }
+  47% { opacity: 0.7; }
+  48% { opacity: 1; }
+}
+@keyframes tv-roll {
+  to { top: 100%; }
+}
+@keyframes tv-noise {
+  0% { background-position: 0 0; }
+  25% { background-position: -40px 30px; }
+  50% { background-position: 25px -45px; }
+  75% { background-position: -15px -20px; }
+  100% { background-position: 0 0; }
+}
+@keyframes tv-blip {
+  0% { opacity: 0.7; }
+  100% { opacity: 0; }
+}
+
+@keyframes fav-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.97); }
+  50% { opacity: 0.75; transform: scale(1.04); }
+}
+@keyframes fav-card-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px var(--color-pink-light), 0 0 1.1rem -0.3rem var(--color-favorite-glow); }
+  50% { box-shadow: 0 0 0 3px var(--color-pink-light), 0 0 2rem 0 var(--color-favorite-glow); }
+}
+@keyframes fav-rise {
+  0% { opacity: 0; transform: translateY(0) scale(0.6); }
+  15% { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(-4.5rem) scale(1.1); }
+}
+@keyframes heartbeat {
+  0%, 60%, 100% { transform: scale(1); }
+  20% { transform: scale(1.18); }
+  35% { transform: scale(0.96); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

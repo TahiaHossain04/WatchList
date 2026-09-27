@@ -1,0 +1,115 @@
+/* =========================================================
+   WEBSITE COLOR PALETTE
+
+   Change these variables to recolor the whole website.
+   Components use these variables instead of hard-coded colors.
+
+   - Dark theme (the default) lives in :root.
+   - Light theme overrides live in [data-theme="light"] below.
+   - index.css gives short Tailwind names to the most common
+     ones (e.g. bg-page, text-ink, bg-gum) — see the @theme block there.
+   ========================================================= */
+
+:root {
+  color-scheme: dark;
+
+  /* ---- Page + surfaces ---------------------------------- */
+  --color-background: #3c3458;       /* main page background (the deep muted purple) */
+  --color-background-deep: #2f2847;  /* darker purple: navbar glass, shelf backs */
+  --color-surface: #463d66;          /* panels / inputs */
+  --color-surface-raised: #52487a;   /* hovered panels, chips */
+  --color-border: rgb(255 240 213 / 0.12);
+  --color-shadow: #211b33;           /* shadows under buttons, books, letters */
+
+  /* ---- Text ---------------------------------------------- */
+  --color-text: #fff0d5;             /* normal text on the purple background (cream) */
+  --color-text-muted: #c7bddf;       /* secondary text */
+  --color-text-dark: #322b4a;        /* text on cream/pink surfaces */
+
+  /* ---- Bubblegum pinks ----------------------------------- */
+  --color-pink-primary: #ff5ea8;     /* main accent */
+  --color-pink-light: #ff9bcb;       /* hover state for buttons */
+  --color-pink-soft: #ffd1e5;
+  --color-pink-deep: #e0479a;        /* outlines, pressed states */
+
+  /* ---- Cream --------------------------------------------- */
+  --color-cream: #fff0d5;            /* the organic buttons */
+  --color-cream-shade: #ecd9b8;      /* the slightly darker bottom edge of buttons */
+
+  /* ---- Big organic buttons (StatusButton.tsx) ------------ */
+  --button-bg: var(--color-cream);
+  --button-shade: var(--color-cream-shade);
+  --button-text: var(--color-text-dark);
+  --button-bg-hover: var(--color-pink-light);
+  --button-text-hover: var(--color-text-dark);
+
+  /* ---- Extra accents (used sparingly) -------------------- */
+  --color-lavender: #b8a7ff;
+  --color-peach: #ffb88c;
+  --color-mint: #a4e5cb;
+  --color-yellow: #f6da7a;
+
+  /* ---- Feedback ------------------------------------------ */
+  --color-danger: #e0567a;           /* delete buttons, error text */
+  --color-danger-shade: #b83a5c;
+  --color-backdrop: rgb(26 21 40 / 0.7); /* dark veil behind pop-up dialogs */
+
+  /* ---- Bubble title lettering (BubbleTitle.tsx) ----------- */
+  --title-fill: #f784c2;             /* the pink body of each letter */
+  --title-outline: #e24a9d;          /* darker pink rim around each letter */
+  --title-gloss: #ffffff;            /* the shiny highlight spots */
+  --title-depth: #2a2342;            /* the shadow the letters cast on the page */
+
+  /* ---- Book spine colors per collection (Shelf / Book) --- */
+  --spine-korean: #f4a3b8;           /* pink / coral */
+  --spine-chinese: #e98a86;          /* soft red */
+  --spine-anime: #b8a7ff;            /* lavender */
+  --spine-english: #9cc0ec;          /* blue */
+  --spine-hindi: #f7bd79;            /* amber */
+  --spine-thai: #8fd8d2;             /* soft teal */
+  --spine-other: #a4e5cb;            /* mint */
+
+  /* ---- TV sets on the channel pages (TvSet.tsx) ---------- */
+  --tv-screen: #1b1630;              /* the dark CRT glass */
+
+  /* ---- VHS tapes (Tape.tsx) + favourite / dislike marks -- */
+  --tape-label: #fff6e6;             /* the sticker the title is written on */
+  --color-favorite-glow: #ff7ec0;    /* glow behind favourite tapes */
+  --color-dislike: #6f6780;          /* the cross sticker */
+
+  /* ---- Shelf plank --------------------------------------- */
+  --shelf-top: #fff0d5;
+  --shelf-front: #e2cda8;
+}
+
+/* =========================================================
+   LIGHT THEME
+   Cream page, purple ink — the same candy shop with the lights on.
+   Only values that differ from dark need to be listed.
+   ========================================================= */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --color-background: #fff4e3;
+  --color-background-deep: #f8e6cc;
+  --color-surface: #fffaf2;
+  --color-surface-raised: #ffe9d0;
+  --color-border: rgb(60 52 88 / 0.14);
+  --color-shadow: #d9c3a3;
+
+  --color-text: #3c3458;
+  --color-text-muted: #6e6390;
+  --color-text-dark: #322b4a;
+
+  /* Buttons flip to purple with cream text in light mode */
+  --button-bg: #3c3458;
+  --button-shade: #251f3a;
+  --button-text: #fff0d5;
+  --button-bg-hover: #ff9bcb;
+  --button-text-hover: #322b4a;
+
+  --title-depth: #c9a98a;
+
+  --shelf-top: #8a6f9e;
+  --shelf-front: #6b547f;
+}

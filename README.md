@@ -129,7 +129,7 @@ Open <http://localhost:5173>. Without Supabase credentials the server runs in **
 | `npm run build` | Production build (`server/dist`, `client/dist`) |
 | `npm start --prefix server` | Run the built server |
 
-**Deploying:** host `client/dist` on any static host (Vercel, Netlify…) with a rewrite of all paths to `index.html`, and set `VITE_API_URL` to your API's URL. Run the server on Render, Railway, Fly.io or similar, with `NODE_ENV=production` and `CLIENT_ORIGIN` set to your site's URL.
+**Deploying (Vercel):** import the repo on Vercel and leave the Root Directory as the repo root. `vercel.json` builds the client and runs the Express API from `api/index.ts` on the same domain, so `VITE_API_URL` stays empty. Under *Project Settings → Environment Variables*, add `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_EMAIL`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` and `NODE_ENV=production`. Demo mode doesn't work on Vercel, so Supabase is required.
 
 ---
 

@@ -4,7 +4,8 @@ import "dotenv/config";
  * Central place for reading environment variables.
  * Everything else in the server imports from here instead of touching process.env.
  */
-const supabaseUrl = process.env.SUPABASE_URL?.trim() || "";
+// Accept the URL with or without a copied "/rest/v1" suffix.
+const supabaseUrl = (process.env.SUPABASE_URL?.trim() || "").replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || "";
 
 export const config = {

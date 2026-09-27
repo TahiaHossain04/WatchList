@@ -7,7 +7,11 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
  *
  * `null` when the env vars are missing → the site runs in demo mode.
  */
-const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+// Accept the URL with or without a copied "/rest/v1" suffix.
+const url = (import.meta.env.VITE_SUPABASE_URL as string | undefined)
+  ?.trim()
+  .replace(/\/rest\/v1\/?$/, "")
+  .replace(/\/$/, "");
 const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
 export const supabase: SupabaseClient | null =

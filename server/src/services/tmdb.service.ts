@@ -116,11 +116,19 @@ export interface TmdbMatch {
 export async function findBestMatch(
   entry: Pick<Entry, "title" | "media_type" | "collection" | "release_year">,
 ): Promise<TmdbMatch | null> {
-  // "Dr. Romantic 3" / "D.P. 2" / "Season 2": TMDB lists later seasons under the show's main title.
+  // Try the exact title first. If that fails and it ends in a season number ("Dr. Romantic 3",
+  // "D.P. 2"), try the show's main title: TMDB usually lists later seasons under it.
+  const first = await matchTitle(entry.title, entry);
+  if (first?.confident || entry.media_type === "movie") return first;
   const baseTitle = entry.title.replace(/(?:\s*[:-]\s*|\s+)(?:(?:season|class|part)\s*)?\d{1,2}$/i, "").trim();
-  const seasonal = entry.media_type !== "movie" && baseTitle !== entry.title && baseTitle.length > 0;
-  const title = seasonal ? baseTitle : entry.title;
+  if (!baseTitle || baseTitle === entry.title) return first;
+  return (await matchTitle(baseTitle, entry)) ?? first;
+}
 
+async function matchTitle(
+  title: string,
+  entry: Pick<Entry, "media_type" | "collection" | "release_year">,
+): Promise<TmdbMatch | null> {
   const results = await searchTmdb(title, entry.media_type);
   if (!results.length) return null;
 

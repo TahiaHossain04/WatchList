@@ -96,7 +96,8 @@ async function main() {
   }
 
   const existing = new Set((await entryStore.list({})).map(key));
-  const fresh = valid.filter((e) => !existing.has(key(e)));
+  // Skip titles already in the library, and repeats within the file itself.
+  const fresh = valid.filter((e) => !existing.has(key(e)) && (existing.add(key(e)), true));
   const skipped = valid.length - fresh.length;
 
   console.log(`${config.demoMode ? "[DEMO MODE] " : ""}${valid.length} valid row(s): ${fresh.length} new, ${skipped} already in the library.`);

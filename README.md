@@ -128,6 +128,7 @@ Open <http://localhost:5173>. Without Supabase credentials the server runs in **
 | `npm run typecheck` | TypeScript check for both |
 | `npm run build` | Production build (`server/dist`, `client/dist`) |
 | `npm start --prefix server` | Run the built server |
+| `npm run import -- imports/file.csv` | Bulk-add entries from a CSV or JSON file (add `--dry-run` to only check). See [`imports/example.csv`](imports/example.csv) |
 
 **Deploying (Vercel):** import the repo on Vercel and leave the Root Directory as the repo root. `vercel.json` builds the client and runs the Express API from `api/index.ts` on the same domain, so `VITE_API_URL` stays empty. Under *Project Settings → Environment Variables*, add `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_EMAIL`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` and `NODE_ENV=production`. Demo mode doesn't work on Vercel, so Supabase is required.
 

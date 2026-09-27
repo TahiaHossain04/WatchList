@@ -43,6 +43,14 @@ export function Layout() {
           <FrozenOutlet />
         </motion.main>
       </AnimatePresence>
+      {/* Required by TMDB's API terms. */}
+      <footer className="relative px-4 pb-6 text-center text-xs text-ink-muted">
+        Posters and details from{" "}
+        <a href="https://www.themoviedb.org" target="_blank" rel="noreferrer" className="underline hover:text-ink">
+          TMDB
+        </a>
+        . This product uses the TMDB API but is not endorsed or certified by TMDB.
+      </footer>
       <HelpButton />
     </div>
   );

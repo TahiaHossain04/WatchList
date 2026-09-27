@@ -5,6 +5,7 @@ import { config } from "./config.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 import { authRouter } from "./routes/auth.routes.js";
 import { entriesRouter } from "./routes/entries.routes.js";
+import { tmdbRouter } from "./routes/tmdb.routes.js";
 
 /**
  * The Express app, without `listen()`.
@@ -21,7 +22,7 @@ app.get("/api/health", (_req, res) => {
 });
 app.use("/api/auth", authRouter);
 app.use("/api/entries", entriesRouter);
-// Future: app.use("/api/tmdb", tmdbRouter) — search proxy so the TMDB key stays server-side.
+app.use("/api/tmdb", tmdbRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

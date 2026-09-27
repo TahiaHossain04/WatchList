@@ -5,6 +5,7 @@ import type { EntryStore } from "./entryStore.js";
 import { createMemoryEntryStore } from "./memoryEntryStore.js";
 import { createSupabaseEntryStore } from "./supabaseEntryStore.js";
 import { supabaseAdmin } from "./supabase.js";
+import { fieldsFromMatch, findBestMatch, tmdbEnabled } from "./tmdb.service.js";
 
 /** The one store the app uses: Supabase when configured, otherwise the demo store. */
 export const entryStore: EntryStore = supabaseAdmin
@@ -43,7 +44,23 @@ export async function createEntry(input: CreateEntryInput): Promise<Entry> {
     reaction: input.reaction ?? null,
     favorite_rank: input.favorite_rank ?? null,
   });
-  return entryStore.create({ ...input, favorite_rank });
+  const tmdbFields = await autoFillFromTmdb(input);
+  return entryStore.create({ ...input, ...tmdbFields, favorite_rank });
+}
+
+/**
+ * New entries without a poster get one from TMDB automatically.
+ * Only confident matches are used, and a TMDB outage never blocks saving.
+ */
+async function autoFillFromTmdb(input: CreateEntryInput) {
+  if (!tmdbEnabled() || input.poster_url || input.tmdb_id != null) return {};
+  try {
+    const match = await findBestMatch({ ...input, release_year: input.release_year ?? null });
+    return match?.confident ? fieldsFromMatch(match.result, input) : {};
+  } catch (err) {
+    console.error(`[tmdb] Lookup failed for "${input.title}":`, err instanceof Error ? err.message : err);
+    return {};
+  }
 }
 
 export async function updateEntry(id: string, input: UpdateEntryInput): Promise<Entry | null> {

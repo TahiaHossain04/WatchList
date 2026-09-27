@@ -42,4 +42,21 @@ export function fetchAdminStatus(): Promise<{ isAdmin: boolean; email: string | 
   return apiRequest("/auth/me");
 }
 
-// Future: searchTmdb(query) → apiRequest(`/tmdb/search?q=...`) — the server holds the TMDB key.
+/** A title found on TMDB. The server holds the TMDB key; this search is admin-only. */
+export interface TmdbResult {
+  tmdb_id: number;
+  kind: "movie" | "tv";
+  title: string;
+  original_title: string;
+  year: number | null;
+  poster_url: string | null;
+  synopsis: string | null;
+  original_language: string;
+}
+
+export function searchTmdb(query: string, type?: MediaType): Promise<TmdbResult[]> {
+  const params = new URLSearchParams({ q: query });
+  if (type) params.set("type", type);
+  return apiRequest<TmdbResult[]>(`/tmdb/search?${params}`);
+}
+

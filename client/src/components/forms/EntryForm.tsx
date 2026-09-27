@@ -16,6 +16,8 @@ import { ChipGroup } from "../ui/ChipGroup";
 import { FavoriteFields } from "./FavoriteFields";
 import { Field, FormSection } from "./Field";
 import { RatingInput } from "./RatingInput";
+import { TmdbPicker } from "./TmdbPicker";
+import type { TmdbResult } from "../../services/entriesApi";
 
 /**
  * The one form used by both Add Entry and Edit Entry.
@@ -42,6 +44,7 @@ export function EntryForm({ initial, submitLabel, onSubmit, onCancel }: EntryFor
   const [errors, setErrors] = useState<EntryFormErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [tmdbId, setTmdbId] = useState<number | null>(initial?.tmdb_id ?? null);
 
   const sections = STATUS_SECTIONS[values.status];
 
@@ -59,6 +62,14 @@ export function EntryForm({ initial, submitLabel, onSubmit, onCancel }: EntryFor
     className: "field-input",
   });
 
+  /** A TMDB match was picked: take its poster and year, and its synopsis if there isn't one yet. */
+  const pickTmdb = (r: TmdbResult) => {
+    setTmdbId(r.tmdb_id);
+    if (r.poster_url) set("poster_url", r.poster_url);
+    if (r.year) set("release_year", String(r.year));
+    if (r.synopsis && !values.synopsis.trim()) set("synopsis", r.synopsis);
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setFormError(null);
@@ -73,7 +84,8 @@ export function EntryForm({ initial, submitLabel, onSubmit, onCancel }: EntryFor
 
     setSubmitting(true);
     try {
-      await onSubmit(toEntryInput(values));
+      // Without a picked match, the server looks one up on TMDB for new entries.
+      await onSubmit({ ...toEntryInput(values), ...(tmdbId != null && { tmdb_id: tmdbId }) });
     } catch (err) {
       if (err instanceof ApiError) {
         setErrors(err.fieldErrors as EntryFormErrors);
@@ -186,7 +198,8 @@ export function EntryForm({ initial, submitLabel, onSubmit, onCancel }: EntryFor
       </AnimatePresence>
 
       {/* ---------- Details ---------- */}
-      <FormSection title="Details" description="Optional. One day TMDB will fill these in for you.">
+      <FormSection title="Details" description="Optional. New entries get a poster from TMDB automatically, or pick the match yourself.">
+        <TmdbPicker title={values.title} mediaType={values.media_type} selectedId={tmdbId} onPick={pickTmdb} />
         <Field label="Director / creator" error={errors.director}>
           {(p) => <input {...p} {...bind("director")} />}
         </Field>

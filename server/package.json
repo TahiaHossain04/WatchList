@@ -8,7 +8,8 @@
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "start": "node dist/server.js",
-    "import": "tsx src/scripts/importEntries.ts"
+    "import": "tsx src/scripts/importEntries.ts",
+    "posters": "tsx src/scripts/fetchPosters.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.0",

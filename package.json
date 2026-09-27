@@ -8,7 +8,8 @@
     "dev": "concurrently -n server,client -c magenta,cyan \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "build": "npm run build --prefix server && npm run build --prefix client",
     "typecheck": "npm run typecheck --prefix server && npm run typecheck --prefix client",
-    "import": "npm run import --prefix server --"
+    "import": "npm run import --prefix server --",
+    "posters": "npm run posters --prefix server --"
   },
   "devDependencies": {
     "concurrently": "^10.0.5"
